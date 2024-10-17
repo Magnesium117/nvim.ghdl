@@ -40,7 +40,7 @@ M.ghdlinit=function()
     end
   end
   file=file..file2
-  local f=io.open("./hdl-prj.json",)
+  local f=io.open("./hdl-prj.json","w")
   f:write(file)
   f:close()
 end
