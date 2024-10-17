@@ -1,17 +1,19 @@
 local M = {}
 local file1=[[{
-    "options": {
-        "ghdl_analysis": [
-            "--workdir=work",
-            "--ieee=synopsys",
-            "-fexplicit"
-        ]
-    },
-    "files": [
+  "options": {
+    "ghdl_analysis": [
+      "--workdir=work",
+      "--ieee=synopsys",
+      "-fexplicit"
+    ]
+  },
+  "files": [
 ]]
-local file2=[[    ]
+local file2=[[
+
+  ]
 }]]
-local line1='{ "file": "'
+local line1='    { "file": "'
 local line2='", "language": "vhdl" }'
 -- local pickers = require("telescope.pickers")
 --   

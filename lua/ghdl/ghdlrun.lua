@@ -1,13 +1,13 @@
 local M = {}
 
-local utils = require("platformio.utils")
+local utils = require("ghdl.utils")
 function M.ghdlanalyze()
   local cmd="ghdl -a"
-  local f=io.open("hld-prj.json","r")
+  local f=io.open("./hdl-prj.json","r")
   json=f:read("a")
   f:close()
   local config=utils.jsondecode(json)
-  for file in config.files do
+  for k, file in ipairs(config.files) do
     cmd=cmd.." "..file.file
   end
   utils.ToggleTerminal(cmd, "float")
