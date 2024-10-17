@@ -24,7 +24,7 @@ local line2='", "language": "vhdl" }'
 -- local utils = require("platformio.utils")
 -- local previewers = require("telescope.previewers")
 
-M.ghdlinit=function(opts)
+M.ghdlinit=function()
   local path=vim.fn.getcwd()
   local files=io.popen('ls -a "'..path..'"')
   local file=file1
