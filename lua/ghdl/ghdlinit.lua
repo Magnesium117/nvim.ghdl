@@ -7,6 +7,10 @@ local file1=[[{
       "-fexplicit"
     ]
   },
+  "test":{
+    "testbench":"testbench",
+    "stop":"10us"
+  }
   "files": [
 ]]
 local file2=[[

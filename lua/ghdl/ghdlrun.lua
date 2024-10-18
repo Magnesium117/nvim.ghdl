@@ -13,11 +13,25 @@ function M.ghdlanalyze()
   utils.ToggleTerminal(cmd, "float")
 end
 function M.ghdlrun(args)
-  local command = "ghdl -r " .. args .. "--vcd=wave.vcd"
+  local f=io.open("./hdl-prj.json","r")
+  json=f:read("a")
+  f:close()
+  local config=utils.jsondecode(json)
+  if args == nil then
+    args=config.test.testbench
+  end
+  local command = "ghdl -r " .. args .. "--vcd=wave.vcd --stop-time="..config.test.stop
   utils.ToggleTerminal(command, "float")
 end
 
 function M.ghdlelaborate(args)
+  local f=io.open("./hdl-prj.json","r")
+  json=f:read("a")
+  f:close()
+  local config=utils.jsondecode(json)
+  if args == nil then
+    args=config.test.testbench
+  end
   local command = "ghdl -e " .. args
   utils.ToggleTerminal(command, "float")
 end
