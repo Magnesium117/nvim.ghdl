@@ -10,7 +10,7 @@ local file1=[[{
   "test":{
     "testbench":"testbench",
     "stop":"10us"
-  }
+  },
   "files": [
 ]]
 local file2=[[
@@ -19,6 +19,8 @@ local file2=[[
 }]]
 local line1='    { "file": "'
 local line2='", "language": "vhdl" }'
+local utils=require("ghdl.utils")
+local json_pretty=require("ghdl.luajson")
 -- local pickers = require("telescope.pickers")
 --   
 -- local finders = require("telescope.finders")
@@ -47,6 +49,33 @@ M.ghdlinit=function()
   end
   file=file..file2
   local f=io.open("./hdl-prj.json","w")
+  f:write(file)
+  f:close()
+end
+M.ghdlupdate=function()
+  local path=vim.fn.getcwd()
+  local files=io.popen('ls -a "'..path..'"')
+  local f=io.open("./hdl-prj.json","r")
+  text=f:read("a")
+  f:close()
+  local config=utils.jsondecode(text)
+  for filename in files:lines() do 
+    if(string.find(filename,'.vhdl')) then
+      config=utils.insert(config,filename)
+    end
+  end
+  local file=file1
+  local start=0
+  for _,val in ipairs(config.files) do
+    if(start==0) then
+        file=file..line1..val.file..line2
+        start=1
+      else
+        file=file..",\n"..line1..val.file..line2
+      end
+  end
+  file=file..file2
+  f=io.open("./hdl-prj.json","w")
   f:write(file)
   f:close()
 end

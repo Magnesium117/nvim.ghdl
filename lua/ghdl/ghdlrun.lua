@@ -12,6 +12,7 @@ function M.ghdlanalyze()
   end
   utils.ToggleTerminal(cmd, "float")
 end
+
 function M.ghdlrun(args)
   local f=io.open("./hdl-prj.json","r")
   json=f:read("a")
@@ -20,7 +21,7 @@ function M.ghdlrun(args)
   if args == nil then
     args=config.test.testbench
   end
-  local command = "ghdl -r " .. args .. "--vcd=wave.vcd --stop-time="..config.test.stop
+  local command = "ghdl -r " .. args .. " --vcd=wave.vcd --stop-time=" .. config.test.stop .. " && gtkwave wave.vcd"
   utils.ToggleTerminal(command, "float")
 end
 
