@@ -49,13 +49,25 @@ M.ghdlinit=function()
     end
   end
   local order=vim.fn.input("Enter order: ")
-  order=order:match('^(.*%S)%s*$')
-  for ch in order:gmatch("%S+") do
-    if(start==0) then
-      file=file..line1..filelist[tonumber(ch)]..line2
-      start=1
-    else
-      file=file..",\n"..line1..filelist[tonumber(ch)]..line2
+  local so=false
+  if order=="" then
+    for ch=0,(count-1),1 do
+      if(start==0) then
+        file=file..line1..filelist[tonumber(ch)]..line2
+        start=1
+      else
+        file=file..",\n"..line1..filelist[tonumber(ch)]..line2
+      end
+    end
+  else
+    order=order:match('^(.*%S)%s*$')
+    for ch in order:gmatch("%S+") do
+      if(start==0) then
+        file=file..line1..filelist[tonumber(ch)]..line2
+        start=1
+      else
+        file=file..",\n"..line1..filelist[tonumber(ch)]..line2
+      end
     end
   end
   file=file..file2
@@ -102,20 +114,30 @@ M.ghdlreorder=function()
   local filelist={}
   print("Decide order of compilation (from top to bottom) by entering the numbers of the files seperated by spaces:")
   local count=0;
-
   for _,val in ipairs(config.files) do 
     print(count..": "..val.file)
     filelist[count]=val.file
     count=count+1
   end
   local order=vim.fn.input("Enter order: ")
-  order=order:match('^(.*%S)%s*$')
-  for ch in order:gmatch("%S+") do
-    if(start==0) then
-      file=file..line1..filelist[tonumber(ch)]..line2
-      start=1
-    else
-      file=file..",\n"..line1..filelist[tonumber(ch)]..line2
+  if order=="" then
+    for ch=0,(count-1),1 do
+      if(start==0) then
+        file=file..line1..filelist[tonumber(ch)]..line2
+        start=1
+      else
+        file=file..",\n"..line1..filelist[tonumber(ch)]..line2
+      end
+    end
+  else
+    order=order:match('^(.*%S)%s*$')
+    for ch in order:gmatch("%S+") do
+      if(start==0) then
+        file=file..line1..filelist[tonumber(ch)]..line2
+        start=1
+      else
+        file=file..",\n"..line1..filelist[tonumber(ch)]..line2
+      end
     end
   end
   file=file..file2
