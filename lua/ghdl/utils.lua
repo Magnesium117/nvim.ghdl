@@ -15,12 +15,12 @@ local function pathmul(n)
   return ".." .. string.rep("/..", n)
 end
 ----------------------------------------------------------------------------------------
-function M.ToggleTerminal(command, direction, title)
+function M.ToggleTerminal(command, direction, closeonexit, title)
   local Terminal = require("toggleterm.terminal").Terminal
   local terminal = Terminal:new({
     cmd = command,
     direction = direction,
-    close_on_exit = false,
+    close_on_exit = closeonexit,
     on_create = function(t)
       if title then
         vim.api.nvim_set_hl(0, "MyWinBar", { bg = "#e4f00e", fg = "#0012d9" })

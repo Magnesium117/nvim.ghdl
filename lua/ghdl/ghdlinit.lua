@@ -37,14 +37,25 @@ M.ghdlinit=function()
   local files=io.popen('ls -a "'..path..'"')
   local file=file1
   local start=0
+  local filelist={}
+  print("Decide order of compilation (from top to bottom) by entering the numbers of the files seperated by spaces:")
+  local count=0;
   for filename in files:lines() do 
     if(string.find(filename,'.vhdl')) then
-      if(start==0) then
-        file=file..line1..filename..line2
-        start=1
-      else
-        file=file..",\n"..line1..filename..line2
-      end
+      print(count..": "..filename)
+      filelist[count]=filename
+      -- table.insert(filelist,{[count]=filename})
+      count=count+1
+    end
+  end
+  local order=vim.fn.input("Enter order: ")
+  order=order:match('^(.*%S)%s*$')
+  for ch in order:gmatch("%S+") do
+    if(start==0) then
+      file=file..line1..filelist[tonumber(ch)]..line2
+      start=1
+    else
+      file=file..",\n"..line1..filelist[tonumber(ch)]..line2
     end
   end
   file=file..file2
@@ -52,6 +63,7 @@ M.ghdlinit=function()
   f:write(file)
   f:close()
 end
+
 M.ghdlupdate=function()
   local path=vim.fn.getcwd()
   local files=io.popen('ls -a "'..path..'"')
@@ -76,6 +88,38 @@ M.ghdlupdate=function()
   end
   file=file..file2
   f=io.open("./hdl-prj.json","w")
+  f:write(file)
+  f:close()
+end
+
+M.ghdlreorder=function()
+  local f=io.open("./hdl-prj.json","r")
+  text=f:read("a")
+  f:close()
+  local config=utils.jsondecode(text)
+  local file=file1
+  local start=0
+  local filelist={}
+  print("Decide order of compilation (from top to bottom) by entering the numbers of the files seperated by spaces:")
+  local count=0;
+
+  for _,val in ipairs(config.files) do 
+    print(count..": "..val.file)
+    filelist[count]=val.file
+    count=count+1
+  end
+  local order=vim.fn.input("Enter order: ")
+  order=order:match('^(.*%S)%s*$')
+  for ch in order:gmatch("%S+") do
+    if(start==0) then
+      file=file..line1..filelist[tonumber(ch)]..line2
+      start=1
+    else
+      file=file..",\n"..line1..filelist[tonumber(ch)]..line2
+    end
+  end
+  file=file..file2
+  local f=io.open("./hdl-prj.json","w")
   f:write(file)
   f:close()
 end
