@@ -146,4 +146,14 @@ M.insert=function(fs,fn)
   end
   return fs
 end
+M.getParentPath=function(_path)
+    local pattern1 = "^(.+)/"
+    local pattern2 = "^(.+)\\"
+
+    if (string.match(_path,pattern1) == nil) then
+        return string.match(_path,pattern2)
+    else
+        return string.match(_path,pattern1)
+    end
+end
 return M

@@ -23,9 +23,13 @@ function M.ghdlrun(args)
   if args == nil then
     args=config.test.testbench
   end
-  local command = "ghdl -r " .. args .. " --vcd=wave.vcd --stop-time=" .. config.test.stop..utils.extra
+  print(utils.getParentPath(debug.getinfo(1).source:sub(2)))
+  local command = "ghdl -r " .. args .. " --vcd=wave.vcd --stop-time=" .. config.test.stop .. " && python "..utils.getParentPath(debug.getinfo(1).source:sub(2)) .. "/../../python/add_sigs.py wave.vcd 1 > wave.gtkw && echo 'do_initial_zoom_fit 1' > .gtkwaverc " .. utils.extra
   utils.ToggleTerminal(command, "float",false)
-  local job =vim.fn.jobstart("gtkwave wave.vcd")
+  -- vim.fn.jobstart("python python/add_sigs.py wave.vcd 1 > wave.gtkw")
+  -- local job =vim.fn.jobstart("gtkwave wave.vcd")
+  os.execute("sleep 0.001")
+  local job =vim.fn.jobstart("gtkwave wave.vcd wave.gtkw")
 end
 
 function M.ghdlelaborate(args,exit)
@@ -47,3 +51,5 @@ function M.ghdlrunall(args)
   M.ghdlrun(args)
 end
 return M
+
+
