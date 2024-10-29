@@ -1,13 +1,22 @@
 local M = {}
 
 local utils = require("ghdl.utils")
+
 function M.ghdlanalyze(exit)
   local cmd="ghdl -a"
   local f=io.open("./hdl-prj.json","r")
-  json=f:read("a")
+  if f==nil then
+    print("could not find ./hdl-prj.json")
+    return
+  end
+  local json=f:read("a")
   f:close()
   local config=utils.jsondecode(json)
-  for k, file in ipairs(config.files) do
+  if config == nil then
+    print("could not decode json from ./hdl-prg.json")
+    return
+  end
+  for _, file in ipairs(config.files) do
     cmd=cmd.." "..file.file
   end
   if exit==nil then exit =false end
@@ -17,9 +26,17 @@ end
 
 function M.ghdlrun(args)
   local f=io.open("./hdl-prj.json","r")
-  json=f:read("a")
+  if f==nil then
+    print("could not find ./hdl-prj.json")
+    return
+  end
+  local json=f:read("a")
   f:close()
   local config=utils.jsondecode(json)
+  if config == nil then
+    print("could not decode json from ./hdl-prg.json")
+    return
+  end
   if args == nil then
     args=config.test.testbench
   end
@@ -29,14 +46,22 @@ function M.ghdlrun(args)
   -- vim.fn.jobstart("python python/add_sigs.py wave.vcd 1 > wave.gtkw")
   -- local job =vim.fn.jobstart("gtkwave wave.vcd")
   os.execute("sleep 0.001")
-  local job =vim.fn.jobstart("gtkwave wave.vcd wave.gtkw")
+  vim.fn.jobstart("gtkwave wave.vcd wave.gtkw")
 end
 
 function M.ghdlelaborate(args,exit)
   local f=io.open("./hdl-prj.json","r")
-  json=f:read("a")
+  if f==nil then
+    print("could not find ./hdl-prj.json")
+    return
+  end
+  local json=f:read("a")
   f:close()
   local config=utils.jsondecode(json)
+  if config == nil then
+    print("could not decode json from ./hdl-prg.json")
+    return
+  end
   if args == nil then
     args=config.test.testbench
   end
