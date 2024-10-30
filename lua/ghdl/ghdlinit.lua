@@ -39,6 +39,8 @@ M.ghdlinit=function()
     print("Could not create file vhdl_ls.toml for rust_hdl lsp")
     return
   end
+  rust_f:write(rust_vhdl)
+  rust_f:close()
   local file=file1
   local start=0
   local filelist={}
