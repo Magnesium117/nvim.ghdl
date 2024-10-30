@@ -19,6 +19,12 @@ local file2=[[
 }]]
 local line1='    { "file": "'
 local line2='", "language": "vhdl" }'
+local rust_vhdl=[[standard="2008"
+[libraries]
+src.files=[
+  "./*.vhdl",
+]
+]]
 local utils=require("ghdl.utils")
 
 M.ghdlinit=function()
@@ -26,6 +32,11 @@ M.ghdlinit=function()
   local files=io.popen('ls -a "'..path..'"')
   if files==nil then
     print("Could not list files in current directory")
+    return
+  end
+  local rust_f=io.open("vhdl_ls.toml","w")
+  if rust_f==nil then
+    print("Could not create file vhdl_ls.toml for rust_hdl lsp")
     return
   end
   local file=file1
