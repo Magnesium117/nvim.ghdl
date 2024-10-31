@@ -1,7 +1,7 @@
 local M = {}
 
 local utils = require("ghdl.utils")
-
+local jobs={}
 function M.ghdlanalyze(exit)
   local cmd="ghdl -a"
   local f=io.open("./hdl-prj.json","r")
@@ -24,8 +24,19 @@ function M.ghdlanalyze(exit)
   utils.ToggleTerminal(cmd, "float",exit)
 end
 
-function M.ghdlrun(args)
-  local f=io.open("./hdl-prj.json","r")
+function M.ghdlrun(args,opts)
+  if args~=nil then
+    if string.sub(args,1,1)=="-" then
+      local sw=args
+      args=opts
+      opts=sw
+    end
+  end
+  local keep_gtkwave=false
+  if opts=="-k" then
+    keep_gtkwave=true
+  end
+ local f=io.open("./hdl-prj.json","r")
   if f==nil then
     print("could not find ./hdl-prj.json")
     return
@@ -46,7 +57,13 @@ function M.ghdlrun(args)
   -- vim.fn.jobstart("python python/add_sigs.py wave.vcd 1 > wave.gtkw")
   -- local job =vim.fn.jobstart("gtkwave wave.vcd")
   os.execute("sleep 0.001")
-  vim.fn.jobstart("gtkwave wave.vcd wave.gtkw")
+  if not keep_gtkwave then
+    for _, job in ipairs(jobs) do
+      vim.fn.jobstop(job)
+    end
+    jobs={}
+  end
+  jobs[#jobs+1]=vim.fn.jobstart("gtkwave wave.vcd wave.gtkw")
 end
 
 function M.ghdlelaborate(args,exit)
@@ -70,10 +87,18 @@ function M.ghdlelaborate(args,exit)
   utils.ToggleTerminal(command, "float",exit)
 end
 
-function M.ghdlrunall(args)
+function M.ghdlrunall(args,opts)
+  if args~=nil then
+    if string.sub(args,1,1)=="-" then
+      local swp=args
+      args=opts
+      opts=swp
+    end
+  end
+
   M.ghdlanalyze(true)
   M.ghdlelaborate(args,true)
-  M.ghdlrun(args)
+  M.ghdlrun(args,opts)
 end
 return M
 
